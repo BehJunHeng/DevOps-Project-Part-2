@@ -1,0 +1,12 @@
+
+.logo {
+    width: 220px; /* keeps the capybara image a fixed size */
+}
+
+.table-striped-custom tbody tr:nth-of-type(odd) {
+    background-color: #f2f2f2; /* grey on every other row, like the lab */
+}
+
+.recipe-row {
+    cursor: pointer; /* hand icon so users know rows are clickable */
+}
