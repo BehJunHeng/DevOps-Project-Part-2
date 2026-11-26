@@ -1,23 +1,31 @@
-function viewRecipes() {
-    var response = '';
-    var request = new XMLHttpRequest();
-    request.open('GET', '/view-recipes' , true);
-    request.setRequestHeader('Content-Type', 'application/json');
-    
-    request.onload = function () {
-        response = JSON.parse(request.responseText);
+var recipesList = [];
 
-        var html = ''
-        for (var i = 0; i < response.length; i++) {
-            //clicking the row opens the details page for the recipe
-            html += '<tr class="recipe-row" onclick="window.location.href=\'recipe-details.html?id=' + response[i].id + '\'">' +
-                '<td>' + (i +1) + '</td>' +
-                '<td>' + response[i].name + '</td>' + 
-                '<td>' + response[i].description + '</td>' + 
-                '<td class="text-right">&#8250;</td>' +
-            '</tr>';    
+// Fetch and render recipes in the 4-column table format
+function viewRecipes() {
+    var request = new XMLHttpRequest();
+    request.open('GET', '/view-recipes', true);
+
+    request.onload = function () {
+        if (request.status !== 200) {
+            return;
         }
+        var recipes = JSON.parse(request.responseText);
+        recipesList = recipes;
+        var html = '';
+
+        // Build table rows dynamically
+        for (var i = 0; i < recipes.length; i++) {
+            var r = recipes[i];
+            html += '<tr style="cursor: pointer;" onclick="window.location.href=\'recipe-details.html?id=' + encodeURIComponent(r.id) + '\'">' +
+                '<td>' + r.id + '</td>' +
+                '<td>' + r.name + '</td>' +
+                '<td>' + (r.description || '') + '</td>' +
+                '<td class="text-right">&rsaquo;</td>' +
+                '</tr>';
+        }
+
         document.getElementById('tableContent').innerHTML = html;
     };
+
     request.send();
 }

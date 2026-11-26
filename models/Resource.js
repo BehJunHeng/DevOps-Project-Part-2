@@ -1,12 +1,27 @@
-class Resource {
-    constructor(name, location, description, owner) {
-        this.name = name;
-        this.location = location;
-        this.description = description;
-        this.owner = owner;
-        const timestamp = new Date().getTime();
-        const random = Math.floor(Math.random() * 1000);
-        this.id = timestamp + "" + random.toString().padStart(3, '0');
-    }
+class Ingredient {
+  constructor(name, quantity, unit, mandatory = false) {
+    this.name = name;
+    this.quantity = quantity;
+    this.unit = unit;
+    this.mandatory = mandatory;
+  }
 }
-module.exports = { Resource };
+
+class Recipe {
+  constructor(name, description, servings, ingredients, steps) {
+    this.id = this.generateId();
+    this.name = name;
+    this.description = description;
+    this.servings = servings;
+    this.ingredients = ingredients;
+    this.steps = steps;
+  }
+
+  generateId() {
+    const timestamp = new Date().getTime();
+    const random = Math.floor(Math.random() * 1000);
+    return timestamp + "" + random.toString().padStart(3, "0");
+  }
+}
+
+module.exports = { Recipe, Ingredient };

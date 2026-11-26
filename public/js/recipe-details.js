@@ -1,24 +1,23 @@
 var currentRecipe = null;
-function viewRecipeDetails(){
-    //get id from URL
+
+function viewRecipeDetails() {
     var id = new URLSearchParams(window.location.search).get('id');
-    if (!id){
+    if (!id) {
         showError('No recipe selected');
         return;
     }
 
     var request = new XMLHttpRequest();
-    request.open('GET', '/view-recipes/' + id, true);
+    request.open('GET', '/view-recipes/' + encodeURIComponent(id), true);
 
     request.onload = function () {
-        if (request.status !==200) {
+        if (request.status !== 200) {
             showError('Recipe not found');
             return;
-        } 
+        }
         var recipe = JSON.parse(request.responseText);
         currentRecipe = recipe;
 
-        //recipe info
         document.getElementById('recipeName').innerHTML = recipe.name;
         document.getElementById('recipeDescription').innerHTML = recipe.description || '';
         document.getElementById('recipeId').innerHTML = recipe.id;
@@ -35,14 +34,13 @@ function viewRecipeDetails(){
                 '<td>' + ingredients[i].quantity + '</td>' +
                 '<td>' + ingredients[i].unit + '</td>' +
                 '<td>' + badge + '</td>' +
-            '</tr>';
+                '</tr>';
         }
         document.getElementById('ingredientsContent').innerHTML = html;
         document.getElementById('ingredientCount').innerHTML = ingredients.length + ' ingredients';
 
-        //steps list
         var steps = recipe.steps || [];
-        var stepsHtml = ''
+        var stepsHtml = '';
         for (var j = 0; j < steps.length; j++) {
             stepsHtml += '<li>' + steps[j] + '</li>';
         }
@@ -50,11 +48,16 @@ function viewRecipeDetails(){
 
         document.getElementById('recipeDetails').classList.remove('d-none');
     };
+
+    request.onerror = function () {
+        showError('Unable to load recipe details');
+    };
+
     request.send();
 }
+
 function showError(message) {
     var box = document.getElementById('errorMessage');
     box.innerHTML = message;
     box.classList.remove('d-none');
 }
-
